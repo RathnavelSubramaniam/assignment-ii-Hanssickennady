@@ -1,0 +1,183 @@
+---
+title: "Assignment - 2 - Machine Learning"
+author: "R Hanssic kennady"
+date: "2022-09-21"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 1. In this exercise you will create some simulated data and will fit simple linear regression models to it. Make sure to use set.seed(1) prior to starting part (a) to ensure consistent results.rnorm
+
+### (a) Using the rnorm() function, create a vector, "x", containing 100 observations drawn from a N(0,1) distribution. This represents a feature, X.
+
+```{r}
+set.seed(1)
+x <- rnorm(100)
+```
+
+### (b) Using the rnorm() function, create a vector, "eps", containing 100 observations drawn from a N(0,0.25) distribution.
+
+```{r}
+eps <- rnorm(100, sd = sqrt(0.25))
+```
+
+### (c) Using "x" and "eps", generate a vector "y" according to the model
+
+### Y = −1 + 0.5X + ε.
+
+### What is the length of the vector "y" ? What are the values of β0 and β1 in this linear model ?
+
+```{r}
+y <- -1 + 0.5 * x + eps
+length(y)
+```
+
+#### ANS: formula for simple linear regression -\> y = β0 + β1 \* x
+
+#### length of y = 100
+
+#### value of β0 = -1
+
+#### value of β1 = 0.5
+
+### (d) Create a scatterplot displaying the relationship between "x" and "y". Comment on what you observe.
+
+```{r}
+plot(x,y)
+
+```
+
+#### ANS: variance of the data is distributed widely and the regression between x and y has positive relationship
+
+### (e) Fit a least squares linear model to predict "y" using "x". Comment on the model obtained. How do β\^0 and β\^1 compare to β0 and β1 ?
+
+```{r}
+fit <- lm(y ~ x)
+summary(fit)
+```
+
+#### ANS: For every unit change in x there is an positive effect on y
+
+#### It has strong relationship based on significant level
+
+#### As compared to f-statistics 85.99 is pretty high
+
+#### predicted value is close to actual value
+
+### (f) Display the least squares line on the scatterplot obtained in (d). Draw the population regression line on the plot, in a different color. Use the legend() function to create an appropriate legend.
+
+```{r}
+plot(x, y)
+abline(fit, col = 2,lwd = 3)
+abline(-1, 0.5, col = 3,lwd = 3)
+legend("bottomright", c("Least square", "Population Regression"), col = c(2, 3), lwd = 3)
+```
+
+## 2. This problem involves the "Boston" data set, which we saw in the lab for this chapter. We will now try to predict per capita crime rate using the other variables in this data set. In other words, per capita crime rate is the response, and the other variables are the predictors.
+
+```{r}
+library(MASS)
+attach(Boston)
+Boston
+```
+
+### (a) For each predictor, fit a simple linear regression model to predict the response. Describe your results. In which of the models is there a statistically significant association between the predictor and the response ? Create some plots to back up your assertions.
+
+```{r}
+# 1
+fit_zn <- lm(crim ~ zn)
+summary(fit_zn)
+```
+
+```{r}
+# 2
+fit_indus <- lm(crim ~ indus)
+summary(fit_indus)
+```
+
+```{r}
+# 3
+chas <- as.factor(chas)
+fit_chas <- lm(crim ~ chas)
+summary(fit_chas)
+```
+
+```{r}
+# 4
+fit_nox <- lm(crim ~ nox)
+summary(fit_nox)
+```
+
+```{r}
+# 5
+fit_rm <- lm(crim ~ rm)
+summary(fit_rm)
+```
+
+```{r}
+# 6
+fit_age <- lm(crim ~ age)
+summary(fit_age)
+```
+
+```{r}
+# 7
+fit_dis <- lm(crim ~ dis)
+summary(fit_dis)
+```
+
+```{r}
+# 8
+fit_rad <- lm(crim ~ rad)
+summary(fit_rad)
+```
+
+```{r}
+# 9
+fit_tax <- lm(crim ~ tax)
+summary(fit_tax)
+```
+
+```{r}
+# 10
+fit_ptratio <- lm(crim ~ ptratio)
+summary(fit_ptratio)
+```
+
+```{r}
+# 11
+fit_black <- lm(crim ~ black)
+summary(fit_black)
+```
+
+```{r}
+# 12
+fit_lstat <- lm(crim ~ lstat)
+summary(fit_lstat)
+```
+
+```{r}
+# 13
+fit_medv <- lm(crim ~ medv)
+summary(fit_medv)
+```
+
+```{r}
+plot(Boston$crim ~ Boston$chas)
+plot(Boston$crim ~ Boston$zn)
+plot(Boston$crim ~ Boston$indus)
+```
+
+#### ANS: when we compared all linear model except chas all the features are less than the p - value so we can say that feature have more significant for the response variable. By seeing the plot we can double check the result that crim and chas has no relationship
+
+### (b) Fit a multiple regression model to predict the response using all of the predictors. Describe your results. For which predictors can we reject the null hypothesis H0:βj=0 ?
+
+```{r}
+fit_all <- lm(crim ~ ., data = Boston)
+summary(fit_all)
+```
+
+#### ANS: compared linear model with multiple linear model the significance level changes and the constant value for crim is 17.033. dis, rad, medv are less than p - value so we reject the null hypothesis
